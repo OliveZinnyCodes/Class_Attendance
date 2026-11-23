@@ -1,0 +1,5 @@
+'use strict';
+Portal.csvCell = value => {let text=String(value??'');if(/^[\s]*[=+@-]/.test(text))text="'"+text;return '"'+text.replace(/"/g,'""')+'"';};
+Portal.csv = rows => '\ufeff'+rows.map(r=>r.map(Portal.csvCell).join(',')).join('\r\n');
+Portal.download = (rows,name) => {try{const blob=new Blob([Portal.csv(rows)],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);Portal.toast('CSV report downloaded.');}catch(e){Portal.toast('The export failed. Please try again.');}};
+Portal.reportRows = sessions => {const rows=[['Session Date','Student ID','Student Name','Role','Attendance Status']];sessions.forEach(session=>Portal.store.data.students.forEach(student=>{if(Object.hasOwn(session.records,student.id))rows.push([session.date,student.id,student.name,'Student',session.records[student.id]]);}));return rows;};

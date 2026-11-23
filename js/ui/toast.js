@@ -1,0 +1,2 @@
+'use strict';
+Portal.toast = (message,undo) => {document.querySelector('.toast')?.remove();clearTimeout(Portal.toastTimer);const el=document.createElement('div');el.className='toast';el.setAttribute('role','status');const label=document.createElement('span');label.textContent=message;el.append(label);if(undo){const button=document.createElement('button');button.textContent='Undo';button.onclick=()=>{undo();el.remove();};el.append(button);}document.body.append(el);Portal.toastTimer=setTimeout(()=>el.remove(),undo?15000:6000);};
